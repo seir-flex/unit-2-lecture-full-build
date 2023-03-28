@@ -9,8 +9,8 @@ app.get('/', (req, res) => {
     res.send('default route')
 })
 
-const tweetsController = require('./controllers/tweets');
-app.use('/tweets', tweetsController);
+const fruitsController = require('./controllers/fruits');
+app.use('/fruits', fruitsController);
 
 // Listener
 app.listen(PORT, () => console.log(`express is listening on port: ${PORT}`));
