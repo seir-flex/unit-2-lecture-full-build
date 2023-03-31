@@ -13,7 +13,19 @@ router.get('/', async (req, res) => {
 
 // Seed
 router.get('/seed', async (req, res) => {
-	res.redirect('fruit seed route');
+  const startFruits = [
+    { name: "Orange", color: "orange", readyToEat: false },
+    { name: "Grape", color: "purple", readyToEat: false },
+    { name: "Banana", color: "orange", readyToEat: false },
+    { name: "Strawberry", color: "red", readyToEat: false },
+    { name: "Coconut", color: "brown", readyToEat: false },
+  ];
+
+  Fruit.remove({}, () => {
+	Fruit.create(startFruits, (error, data) => {
+		res.json(data)
+	})
+  })
 });
 
 // Show
