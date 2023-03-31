@@ -15,11 +15,14 @@ app.set('view engine', 'ejs');
 app.use(express.static("public")) // serve files from public statically
 
 app.get('/', (req, res) => {
-    res.send('default route')
+    res.render("index.ejs")
 })
 
 const fruitsController = require('./controllers/fruits');
 app.use('/fruits', fruitsController);
+
+const UserRouter = require('./controllers/user');
+app.use('/user', UserRouter);
 
 // Listener
 app.listen(process.env.PORT, () =>
