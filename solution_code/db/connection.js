@@ -1,18 +1,31 @@
-require("dotenv").config();
-const mongoose = require("mongoose")
 
-const connectionString = process.env.DATABASE_URL
+// import mongoose
+const mongoose = require('mongoose')
 
-mongoose.connect(connectionString)
+// database configuration 
+const DATABASE_URL =
+	'mongodb+srv://admin:9qXBcu7n9JccCqZ@cluster0.yxzesjt.mongodb.net/carina?retryWrites=true&w=majority';
 
-mongoose.connection.on("connected", () => {
-    console.log("Mongoose connected to mongoDB")
-})
+// mongoose connect to url
+mongoose.connect(DATABASE_URL)
 
-mongoose.connection.on("error", (error) => {
-    console.log("mongoDB Connection Error:", error)
-})
+// export mongoose 
+module.exports = { mongoose }
 
-mongoose.connection.on("disconnected", () => {
-    console.log("mongoDB disconnected")
-})
+// const mongoose = require("mongoose")
+
+// const connectionString = process.env.DATABASE_URL
+
+// mongoose.connect(connectionString)
+
+// mongoose.connection.on("connected", () => {
+//     console.log("Mongoose connected to mongoDB")
+// })
+
+// mongoose.connection.on("error", (error) => {
+//     console.log("mongoDB Connection Error:", error)
+// })
+
+// mongoose.connection.on("disconnected", () => {
+//     console.log("mongoDB disconnected")
+// })

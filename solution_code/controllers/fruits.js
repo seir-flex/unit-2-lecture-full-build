@@ -1,46 +1,45 @@
 const express = require('express');
 const router = express.Router();
+const startFruits = require('../db/fruitSeedData.js')
+const Fruit = require('../models/fruit.js')
 
-// Create
 router.post('/', async (req, res) => {
-	res.send('fruit post route');
+	const fruit = await Fruit.create(req.body);
+	// then do this thing
+	res.send(fruit);
 });
 
 // Index
 router.get('/', async (req, res) => {
-	res.send('fruit index route');
+	const fruits = await Fruit.find({});
+	res.send(fruits);
 });
 
 // Seed
 router.get('/seed', async (req, res) => {
-  const startFruits = [
-    { name: "Orange", color: "orange", readyToEat: false },
-    { name: "Grape", color: "purple", readyToEat: false },
-    { name: "Banana", color: "orange", readyToEat: false },
-    { name: "Strawberry", color: "red", readyToEat: false },
-    { name: "Coconut", color: "brown", readyToEat: false },
-  ];
-
-  Fruit.remove({}, () => {
-	Fruit.create(startFruits, (error, data) => {
-		res.json(data)
-	})
-  })
+	await Fruit.deleteMany({});
+	await Fruit.create(startFruits);
+	res.redirect('/fruits');
 });
 
 // Show
 router.get('/:id', async (req, res) => {
-	res.send('fruit show route');
+	const fruit = await Fruit.findById(req.params.id);
+	res.send(fruit);
 });
 
 // Delete
 router.delete('/:id', async (req, res) => {
-	res.send('fruit delete route');
+	const fruit = await Fruit.findByIdAndDelete(req.params.id);
+	res.send({ success: true, fruit });
 });
 
 // Update
 router.put('/:id', async (req, res) => {
-	res.send('fruit update route');
+	const fruit = await Fruit.findByIdAndUpdate(req.params.id, req.body, {
+		new: true,
+	});
+	res.send(fruit);
 });
 
 module.exports = router;

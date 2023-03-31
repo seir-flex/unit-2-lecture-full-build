@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const { mongoose } = require('../db/connection');
 
 const fruitsSchema = new mongoose.Schema({
     name: String,
@@ -7,3 +7,5 @@ const fruitsSchema = new mongoose.Schema({
 })
 
 const Fruit = mongoose.model('Fruit', fruitsSchema)
+
+module.exports = Fruit
