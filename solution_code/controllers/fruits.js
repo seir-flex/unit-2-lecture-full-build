@@ -25,13 +25,14 @@ router.get('/seed', async (req, res) => {
 // Show...show one fruit
 router.get('/:id', async (req, res) => {
 	const fruit = await Fruit.findById(req.params.id);
-	res.send(fruit);
+	// res.send(fruit);
+	res.render("fruits/show.ejs", {fruit})
 });
 
 // Delete
 router.delete('/:id', async (req, res) => {
 	const fruit = await Fruit.findByIdAndDelete(req.params.id);
-	res.send({ success: true, fruit });
+	res.redirect('/fruits');
 });
 
 // Update
