@@ -4,10 +4,13 @@
 
     <body>
         <%- include("../partials/header.ejs") %>
+        <!-- add main element -->
             <main>
-                <div>
+                <!-- add div -->
+                 <div>   
+                    <!-- loop over fruits array uin for of -->
                     <% for (fruit of fruits) { %>
-
+                        <!-- create an article -->
                         <article>
                             <a href="/fruits/<%= fruit._id %>">
                                 <h2>
