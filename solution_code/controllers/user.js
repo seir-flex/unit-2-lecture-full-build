@@ -30,6 +30,12 @@ router.get('/login', (req, res) => {
 	res.render('user/login.ejs');
 });
 
+router.get('/logout', (req, res) => {
+	 req.session.destroy((err) => {
+			res.redirect('/');
+		});
+});
+
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 	const user = await User.findOne({ username });
@@ -39,6 +45,8 @@ router.post('/login', async (req, res) => {
 		//check if password matches
 		const result = bcrypt.compareSync(password, user.password);
 		if (result) {
+            req.session.username = username;
+			req.session.loggedIn = true;
 			res.redirect('/fruits');
 		} else {
 			res.send('wrong password');

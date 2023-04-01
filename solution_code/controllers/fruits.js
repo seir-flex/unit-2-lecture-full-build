@@ -3,10 +3,20 @@ const router = express.Router();
 const startFruits = require('../db/fruitSeedData.js')
 const Fruit = require('../models/fruit.js')
 
+// Authorization Middleware
+router.use((req, res, next) => {
+  if (req.session.loggedIn) {
+    next();
+  } else {
+    res.redirect("/user/login");
+  }
+});
+
 // 
 router.post('/', async (req, res) => {
 	// check if the readyToEat property should be true or false
 	req.body.readyToEat = req.body.readyToEat === 'on' ? true : false;
+	req.body.username = req.session.username;
 	const fruit = await Fruit.create(req.body);
 	res.redirect('/fruits');
 });
@@ -17,7 +27,7 @@ router.get('/new', async (req, res) => {
 
 // Index
 router.get('/', async (req, res) => {
-	const fruits = await Fruit.find({});
+	const fruits = await Fruit.find({username: req.session.username});
 	// res.send(fruits);
 	res.render('fruits/index.ejs', { fruits });
 });
