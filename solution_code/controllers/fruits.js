@@ -8,10 +8,11 @@ router.post('/', async (req, res) => {
 	res.send(fruit);
 });
 
-// Index
+// Index...show all fruits
 router.get('/', async (req, res) => {
 	const fruits = await Fruit.find({});
-	res.send(fruits);
+	// res.send(fruits);
+	res.render("fruits/index.ejs", {fruits});
 });
 
 // Seed
@@ -21,7 +22,7 @@ router.get('/seed', async (req, res) => {
 	res.redirect('/fruits');
 });
 
-// Show
+// Show...show one fruit
 router.get('/:id', async (req, res) => {
 	const fruit = await Fruit.findById(req.params.id);
 	res.send(fruit);
