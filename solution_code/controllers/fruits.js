@@ -16,6 +16,12 @@ router.get('/new', (req, res) => {
  res.render("fruits/new.ejs")
 })
 
+// /fruits/123/edit
+router.get('/:id/edit', async (req, res) => {
+	const fruit = await Fruit.findById(req.params.id);
+	res.render("fruits/edit.ejs", {fruit})
+})
+
 // Index...show all fruits
 router.get('/', async (req, res) => {
 	// wait or this to complete
@@ -49,10 +55,12 @@ router.delete('/:id', async (req, res) => {
 
 // Update
 router.put('/:id', async (req, res) => {
-	const fruit = await Fruit.findByIdAndUpdate(req.params.id, req.body, {
+	const id = req.params.id;
+	req.body.readyToEat = req.body.readyToEat === 'on' ? true : false;
+	const fruit = await Fruit.findByIdAndUpdate(id, req.body, {
 		new: true,
 	});
-	res.send(fruit);
+	res.redirect('/fruits');
 });
 
 module.exports = router;
