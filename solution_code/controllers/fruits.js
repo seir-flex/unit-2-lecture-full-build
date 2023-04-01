@@ -5,8 +5,10 @@ const Fruit = require('../models/fruit.js')
 
 // Post
 router.post('/', async (req, res) => {
+	console.log(req.body)
+	req.body.readyToEat = req.body.readyToEat === 'on' ? true : false;
 	const fruit = await Fruit.create(req.body);
-	res.send(fruit);
+	res.redirect('/fruits');
 });
 
 // New
