@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
+let failedLogin
 
 router.get('/login', (req, res) => {
     res.render('users/login');
@@ -19,6 +20,7 @@ router.post('/login', async(req, res, next) => {
             user = await User.findOne({email: req.body.email});
             // console.log(user)
         } else {
+            failedLogin = "Your username or password didn't match"
             return res.redirect('/login');
         }
         const match = await bcrypt.compare(req.body.password, user.password);
@@ -31,7 +33,10 @@ router.post('/login', async(req, res, next) => {
             // console.log(match);
             // console.log(userExists);
             res.redirect('/fruits');
-        } else res.redirect('/login');
+        } else {
+            failedLogin = "Your username or password didn't match"
+            res.redirect('/login');
+        }
     } catch(err) {
         console.log(err);
         next();
@@ -55,6 +60,11 @@ router.post('/signup', async(req, res, next) => {
         console.log(err);
         next();
     }
+})
+
+router.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/login');
 })
 
 module.exports = router;

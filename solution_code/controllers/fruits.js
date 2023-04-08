@@ -25,6 +25,7 @@ router.get('/:id/edit', async (req, res) => {
 // Index...show all fruits
 router.get('/', async (req, res) => {
 	let user
+	console.log(req.session);
 	if(req.session.currentUser) user = req.session.currentUser.username
 	// wait or this to complete
 	// Fruit.find() is a Promise
