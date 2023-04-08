@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include("../partials/head.ejs") %>
-
+<% if(user) { %>
+    <h3>Hello, <%= user %></h3>
+<% } %>
     <body>
         <%- include("../partials/header.ejs") %>
         <!-- add main element -->

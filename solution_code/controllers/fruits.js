@@ -24,13 +24,14 @@ router.get('/:id/edit', async (req, res) => {
 
 // Index...show all fruits
 router.get('/', async (req, res) => {
+	console.log(req.session);
 	// wait or this to complete
 	// Fruit.find() is a Promise
 	// Promise is resolved or rejected
 	const fruits = await Fruit.find({});
 	// then run the next line of code
 	// res.send(fruits);
-	res.render("fruits/index.ejs", {fruits});
+	res.render("fruits/index.ejs", {fruits, user: req.session.currentUser.username});
 });
 
 // Seed
