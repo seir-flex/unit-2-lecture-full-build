@@ -1,4 +1,7 @@
 <%- include("../partials/head.ejs") %>
+<% if(message) { %>
+    <h2><%= message %></h2>
+<% } %>
 <h1>Signup for an account</h1>
 <form method="POST" action="/signup">
     <label for="email">Email:</label>

@@ -1,4 +1,7 @@
 <%- include("../partials/head.ejs") %>
+<% if(failure) { %>
+    <h2><%= failure %></h2>
+<% } %>
 <h1>Login to your account</h1>
 <form method="POST" action="/login">
     <label for="email">Email or username:</label>

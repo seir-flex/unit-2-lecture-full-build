@@ -2,14 +2,23 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
-let failedLogin
 
 router.get('/login', (req, res) => {
-    res.render('users/login');
+    console.log(req.query);
+    let failure
+    if(req.query.login === 'fail') {
+        failure = "Either your username or your password did not match"
+    }
+    res.render('users/login', {failure});
 });
 
 router.get('/signup', (req, res) => {
-    res.render('users/signup');
+    let message;
+    console.log(req.query);
+    if(req.query.tooShort !== undefined) {
+        message = `Your password is too short. It has to be at least 6 characters and yours is only ${req.query.tooShort} characters`
+    }
+    res.render('users/signup', {message});
 });
 
 router.post('/login', async(req, res, next) => {
@@ -20,8 +29,7 @@ router.post('/login', async(req, res, next) => {
             user = await User.findOne({email: req.body.email});
             // console.log(user)
         } else {
-            failedLogin = "Your username or password didn't match"
-            return res.redirect('/login');
+            return res.redirect('/login?login=fail');
         }
         const match = await bcrypt.compare(req.body.password, user.password);
         if(match) {
@@ -34,8 +42,7 @@ router.post('/login', async(req, res, next) => {
             // console.log(userExists);
             res.redirect('/fruits');
         } else {
-            failedLogin = "Your username or password didn't match"
-            res.redirect('/login');
+            res.redirect('/login?login=fail');
         }
     } catch(err) {
         console.log(err);
@@ -46,6 +53,9 @@ router.post('/login', async(req, res, next) => {
 router.post('/signup', async(req, res, next) => {
     try {
         const newUser = req.body;
+        if(req.body.password.length < 6) {
+            return res.redirect('/signup?tooShort=' + req.body.password.length)
+        }
         // console.log(newUser);
         const rounds = process.env.SALT_ROUNDS
         const salt = await bcrypt.genSalt(parseInt(rounds));
