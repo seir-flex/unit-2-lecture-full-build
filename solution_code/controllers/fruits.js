@@ -65,7 +65,7 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     const fruit = await Fruit.findById(req.params.id);
 
-    if (fruit.user.toString() === req.session.userId.toString()) {
+    if (fruit.user === req.session.userId) {
         await Fruit.findByIdAndDelete(req.params.id);
 
         const user = await User.findById(req.session.userId);
