@@ -35,7 +35,7 @@ app.use(express.urlencoded({extended: true})) // parse urlencoded request bodies
 app.use(express.static("public")) // serve files from public statically
 
 app.get('/', (req, res) => {
-    res.send('default route')
+    res.render('home')
 })
 
 const fruitsController = require('./controllers/fruits');

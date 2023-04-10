@@ -2,17 +2,28 @@ const express = require('express');
 const router = express.Router();
 const startFruits = require('../db/fruitSeedData.js')
 const Fruit = require('../models/fruit.js')
+const User = require('../models/user.js')
+const isAuthenticated = require('../db/auth.js').isAuthenticated;
 
 // Post
-router.post('/', async (req, res) => {
-	console.log(req.body)
-	req.body.readyToEat = req.body.readyToEat === 'on' ? true : false;
-	const fruit = await Fruit.create(req.body);
-	res.redirect('/fruits');
+router.post('/', isAuthenticated, async (req, res) => {
+    req.body.readyToEat = req.body.readyToEat === 'on' ? true : false;
+    req.body.user = res.locals.userId; // set user id on new fruit object
+    const fruit = await Fruit.create(req.body);
+
+    const user = await User.findById(req.session.userId);
+    if (!user) {
+        return res.send('User not found.');
+    }
+    user.fruits.push(fruit);
+    await user.save();
+
+    res.redirect('/fruits');
 });
 
 // New
 router.get('/new', (req, res) => {
+    console.log(req.session)
  res.render("fruits/new.ejs")
 })
 
@@ -52,18 +63,35 @@ router.get('/:id', async (req, res) => {
 
 // Delete
 router.delete('/:id', async (req, res) => {
-	const fruit = await Fruit.findByIdAndDelete(req.params.id);
-	res.redirect('/fruits');
+    const fruit = await Fruit.findById(req.params.id);
+
+    if (fruit.user.toString() === req.session.userId.toString()) {
+        await Fruit.findByIdAndDelete(req.params.id);
+
+        const user = await User.findById(req.session.userId);
+        user.fruits.pull(req.params.id);
+        await user.save();
+
+        res.redirect('/fruits');
+    } else {
+        res.send('You are not authorized to delete this fruit.');
+    }
 });
 
 // Update
 router.put('/:id', async (req, res) => {
-	const id = req.params.id;
-	req.body.readyToEat = req.body.readyToEat === 'on' ? true : false;
-	const fruit = await Fruit.findByIdAndUpdate(id, req.body, {
-		new: true,
-	});
-	res.redirect('/fruits');
+    const id = req.params.id;
+    req.body.readyToEat = req.body.readyToEat === 'on' ? true : false;
+    const fruit = await Fruit.findById(id);
+    
+    if (fruit.user === req.session.userId) {
+        const updatedFruit = await Fruit.findByIdAndUpdate(id, req.body, {
+            new: true,
+        });
+        res.redirect('/fruits');
+    } else {
+        res.send('You are not authorized to update this fruit.');
+    }
 });
 
 module.exports = router;

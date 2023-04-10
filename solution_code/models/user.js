@@ -12,7 +12,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please enter a username"],
         unique: [true, "That username already exists"]
-    }
+    },
+    fruits: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Fruit'
+    }]
 }, {timestamps: true});
 
 const User = mongoose.model('user', userSchema);
